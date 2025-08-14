@@ -1,6 +1,10 @@
 <!DOCTYPE html>
 <html lang="pt-BR" class="scroll-smooth">
 <head>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script id="MathJax-script" async
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Infográfico: A Matemática por Trás do Pac-Man</title>
@@ -166,13 +170,13 @@ python pacman.py</code></pre>
                         <h3 class="text-xl mb-4 text-[#D97706]">01. Vetores: Descrevendo o Mundo</h3>
                         <p class="mb-4 text-gray-600 leading-relaxed">
                             A primeira abstração foi representar a posição e a direção. Em vez de coordenadas `(x, y)`, tratamos o Pac-Man como um <strong>vetor de posição</strong>
-                            <span class="formula font-serif italic">p⃗</span> = <span class="formula matrix"><table><tr><td>x</td></tr><tr><td>y</td></tr></table></span>.
+                           \( \vec{p} = \begin{bmatrix} x \\ y \end{bmatrix} \)
                             O movimento é um <strong>vetor de direção</strong>, como
-                            <span class="formula font-serif italic">d⃗</span> = <span class="formula matrix"><table><tr><td>1</td></tr><tr><td>0</td></tr></table></span>
+                            \( \vec{d} = \begin{bmatrix} 1 \\ 0 \end{bmatrix} \)
                             para a direita.
                         </p>
                         <p class="mb-4 text-gray-600 leading-relaxed">
-                            No jogo, a nova posição é calculada por <em>p⃗' = p⃗ + v · d⃗</em>, onde <em>v</em> é a velocidade. Em um grid, <em>d⃗</em> costuma ser um dos vetores base: (1,0), (-1,0), (0,1), (0,-1).
+                            No jogo, a nova posição é calculada por \( \vec{p}' = \vec{p} + v \cdot \vec{d} \), onde <em>v</em> é a velocidade. Em um grid, <em>d⃗</em> costuma ser um dos vetores base: (1,0), (-1,0), (0,1), (0,-1).
                         </p>
                         <div class="bg-gray-50 border rounded p-3 text-xs text-gray-700">
                             <p class="font-semibold mb-2">Código (conceito em Python):</p>
@@ -205,7 +209,7 @@ px, py = px + dx*speed, py + dy*speed</code></pre>
                         <h3 class="text-xl mb-4 text-[#EF4444]">02. Operações: A Lógica da Perseguição</h3>
                         <p class="mb-4 text-gray-600 leading-relaxed">
                             A "inteligência" dos fantasmas nasce da <strong>subtração de vetores</strong>. Para perseguir, um fantasma calcula o vetor que o conecta ao Pac-Man:
-                            <span class="formula font-serif italic">v⃗<sub>caminho</sub> = p⃗<sub>pacman</sub> - p⃗<sub>fantasma</sub></span>.
+                           \[ \vec{v}_{\text{caminho}} = \vec{p}_{\text{pacman}} - \vec{p}_{\text{fantasma}} \]
                         </p>
                         <p class="mb-4 text-gray-600 leading-relaxed">
                             Esse vetor aponta a direção geral de movimento. Em cada decisão, o fantasma escolhe a ação que mais aproxima sua posição ao longo de <em>v⃗<sub>caminho</sub></em>.
@@ -242,10 +246,10 @@ gx, gy = gx + dx, gy + dy</code></pre>
                         <h3 class="text-xl mb-4 text-[#06B6D4]">03. Norma: A Tomada de Decisão</h3>
                         <p class="mb-4 text-gray-600 leading-relaxed">
                             Numa encruzilhada, qual o caminho mais curto? A resposta vem da <strong>norma de um vetor</strong>, que nos dá a distância:
-                            <span class="formula">dist = <span class="norm"><span class="font-serif italic">p⃗<sub>alvo</sub> - p⃗<sub>fantasma</sub></span></span></span>.
+                            \[ \text{dist} = \left\|\vec{p}_{\text{alvo}} - \vec{p}_{\text{fantasma}}\right\| \]
                         </p>
                         <p class="mb-4 text-gray-600 leading-relaxed">
-                            Em grids, duas métricas são comuns: <em>Euclidiana</em> (√(Δx²+Δy²)) e <em>Manhattan</em> (|Δx|+|Δy|). A Euclidiana favorece a reta; a Manhattan favorece caminhos ortogonais. O jogo pode adotar qualquer uma nas comparações.
+                            Em grids, duas métricas são comuns: <strong>Euclidiana:</strong> \(\sqrt{(\Delta x)^2 + (\Delta y)^2}\) e <strong>Manhattan:</strong> \(|\Delta x| + |\Delta y|\). A Euclidiana favorece a reta; a Manhattan favorece caminhos ortogonais. O jogo pode adotar qualquer uma nas comparações.
                         </p>
                         <div class="bg-gray-50 border rounded p-3 text-xs text-gray-700">
                             <p class="font-semibold mb-2">Código (conceito em Python):</p>
@@ -277,7 +281,7 @@ melhor = min(opcoes_de_caminho, key=lambda p: dist_euclid(p, alvo))</code></pre>
                     <div class="md:order-last">
                         <h3 class="text-xl mb-4 text-[#F59E0B]">04. Matriz: A Estrutura do Labirinto</h3>
                         <p class="mb-4 text-gray-600 leading-relaxed">
-                           O labirinto é um <strong>grafo</strong>, representado por uma <strong>matriz de adjacência</strong>. Se `A[i][j] = 1`, há um caminho do ponto `i` ao `j`. Se for `0`, há uma parede. Uma consulta simples valida qualquer movimento.
+                           O labirinto é um <strong>grafo</strong>, representado por uma <strong>matriz de adjacência</strong>. Se \( \displaystyle A[i][j] = 1 \), há um caminho do ponto `i` ao `j`. Se for `0`, há uma parede. Uma consulta simples valida qualquer movimento.
                         </p>
                         <div class="bg-gray-50 border rounded p-3 text-xs text-gray-700">
                             <p class="font-semibold mb-2">Código (conceito em Python):</p>
@@ -306,10 +310,10 @@ if pode_mover(A, no_atual, prox_no):
             <section id="glossario" class="card">
                 <h3 class="text-xl mb-4 text-[#6366F1]">Glossário Rápido</h3>
                 <ul class="list-disc pl-6 text-gray-600 space-y-2">
-                    <li><strong>Vetor:</strong> par ordenado (x, y) com direção e magnitude; representa posição e movimento.</li>
-                    <li><strong>Produto Interno:</strong> soma x<sub>1</sub>x<sub>2</sub>+y<sub>1</sub>y<sub>2</sub>; mede alinhamento entre vetores.</li>
-                    <li><strong>Norma (distância):</strong> tamanho de um vetor; Euclidiana (L2) ou Manhattan (L1).</li>
-                    <li><strong>Matriz de Adjacência:</strong> tabela 0/1 indicando arestas entre nós do grafo.</li>
+                    <li><strong>Vetor:</strong> par ordenado \((x, y)\) com direção e magnitude; representa posição e movimento.</li>
+                    <li><strong>Produto Interno:</strong> soma \(\displaystyle x_1 x_2 + y_1 y_2\); mede alinhamento entre vetores.</li>
+                    <li><strong>Norma (distância):</strong> tamanho de um vetor; Euclidiana (\(L_2\)) ou Manhattan (\(L_1\)).</li>
+                    <li><strong>Matriz de Adjacência:</strong> tabela \(0/1\) indicando arestas entre nós do grafo.</li>
                 </ul>
             </section>
 

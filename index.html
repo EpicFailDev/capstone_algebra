@@ -12,10 +12,6 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Press+Start+2P&display=swap" rel="stylesheet">
-    <!-- Chosen Palette: Energetic & Playful -->
-    <!-- Application Structure Plan: A single-page, scrollable narrative infographic. A sticky top navigation bar allows users to jump between four key sections, each dedicated to a core linear algebra concept from the report. Each section uses a two-column layout, pairing concise explanatory text with a large, interactive canvas visualization. This structure was chosen to transform the static report into a dynamic, "read-then-do" learning experience, making abstract concepts tangible. The linear flow guides new users, while the navigation supports quick reference for those already familiar with the topics. -->
-    <!-- Visualization & Content Choices: 1. Vectors: Report text explains vectors. Goal: Inform. Viz: Interactive Canvas diagram showing Pac-Man. Interaction: Hovering over direction buttons draws the corresponding vector. Justification: Visually connects the abstract concept of a vector to tangible character movement. Method: JS Canvas API. 2. Operations: Report text explains vector subtraction. Goal: Show Relationship. Viz: Canvas diagram of a ghost and Pac-Man. Interaction: A button click calculates and draws the chase vector between them. Justification: Clearly demonstrates how subtraction results in a direction, forming the basis of AI. Method: JS Canvas API. 3. Norm: Report text explains distance calculation. Goal: Compare/Decide. Viz: Canvas diagram of a ghost at a fork. Interaction: A button click calculates the norm for two possible paths and highlights the shorter one. Justification: Demystifies the AI's decision-making process by visualizing the distance comparison. Method: JS Canvas API. 4. Matrix: Report text explains the adjacency matrix. Goal: Organize. Viz: Interactive canvas diagram linking a visual map to its matrix representation. Interaction: Hovering over map nodes highlights the corresponding row/column in the matrix. Justification: Bridges the gap between the physical layout of a level and its abstract data structure. Method: JS Canvas API & HTML. -->
-    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
     <style>
         body {
             font-family: 'Inter', sans-serif;
@@ -417,7 +413,6 @@ if pode_mover(A, no_atual, prox_no):
                 drawPacman(vCtx, vCanvas.clientWidth / 2, vCanvas.clientHeight / 2, 25, 0.35);
                 if (direction) {
                     drawVector(vCtx, vCanvas.clientWidth / 2, vCanvas.clientHeight / 2, vCanvas.clientWidth / 2 + direction.x * 60, vCanvas.clientHeight / 2 + direction.y * 60, '#3B82F6');
-            // rótulo do vetor
             vCtx.fillStyle = '#9CA3AF';
             vCtx.font = '10px "Press Start 2P"';
             vCtx.textAlign = 'left';
@@ -588,7 +583,6 @@ if pode_mover(A, no_atual, prox_no):
 
             initializeCanvases();
 
-            // copiar comando de execução
             const copyBtn = document.getElementById('copy-run');
             if (copyBtn && navigator.clipboard) {
                 copyBtn.addEventListener('click', async () => {

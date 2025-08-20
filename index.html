@@ -13,116 +13,263 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Press+Start+2P&display=swap" rel="stylesheet">
     <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #ffffff;
-            color: #1F2937;
-        }
-        h1, h2, h3, .font-display {
-            font-family: 'Press Start 2P', cursive;
-        }
-        .nav-link {
-            position: relative;
-            transition: color 0.3s;
-        }
-        .nav-link::after {
-            content: '';
-            position: absolute;
-            width: 100%;
-            transform: scaleX(0);
-            height: 2px;
-            bottom: -4px;
-            left: 0;
-            background-color: #FBBF24;
-            transform-origin: bottom right;
-            transition: transform 0.3s ease-out;
-        }
-        .nav-link:hover {
-            color: #FBBF24;
-        }
-        .nav-link:hover::after {
-            transform: scaleX(1);
-            transform-origin: bottom left;
-        }
-        .card {
-            background-color: #F9FAFB;
-            border: 1px solid #E5E7EB;
-            border-radius: 1rem;
-            padding: 2rem;
-            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-        }
-        .chart-container {
-            position: relative;
-            width: 100%;
-            max-width: 500px;
-            height: 350px;
-            max-height: 400px;
-        }
-        .interactive-canvas {
-            background-color: #111827;
-            border-radius: 0.75rem;
-            border: 4px solid #374151;
-        }
-        .btn-action {
-            font-family: 'Press Start 2P', cursive;
-            transition: all 0.2s;
-            border-radius: 0.5rem;
-            padding: 0.75rem 1rem;
-            font-size: 0.75rem;
-            color: #111827;
-        }
-        .btn-action:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-        }
-        .formula {
-            display: inline-flex;
-            align-items: center;
-            vertical-align: middle;
-            margin: 0 0.25rem;
-        }
-        .matrix {
-            display: inline-flex;
-            align-items: center;
-            border-left: 2px solid #374151;
-            border-right: 2px solid #374151;
-            padding: 0 0.5rem;
-            border-radius: 0.25rem;
-        }
-        .norm {
-            display: inline-flex;
-            align-items: center;
-            border-left: 2px solid #374151;
-            border-right: 2px solid #374151;
-            padding: 0 0.25rem;
-            font-weight: bold;
-        }
-        .norm::before, .norm::after {
-            content: '';
-            display: inline-block;
-            width: 2px;
-            background: #374151;
-            margin: 0 2px;
-            align-self: stretch;
-        }
-    </style>
+    /* ==========================================================================
+       Estilos Base e Layout
+       ========================================================================== */
+
+    body {
+        font-family: 'Inter', sans-serif;
+        background-color: #ffffff;
+        color: #1F2937;
+    }
+    h1, h2, h3, .font-display {
+        font-family: 'Press Start 2P', cursive;
+    }
+    .nav-link {
+        position: relative;
+        transition: color 0.3s;
+    }
+    .nav-link::after {
+        content: '';
+        position: absolute;
+        width: 100%;
+        transform: scaleX(0);
+        height: 2px;
+        bottom: -4px;
+        left: 0;
+        background-color: #FBBF24;
+        transform-origin: bottom right;
+        transition: transform 0.3s ease-out;
+    }
+    .nav-link:hover {
+        color: #FBBF24;
+    }
+    .nav-link:hover::after {
+        transform: scaleX(1);
+        transform-origin: bottom left;
+    }
+    .card {
+        background-color: #F9FAFB;
+        border: 1px solid #E5E7EB;
+        border-radius: 1rem;
+        padding: 2rem;
+        box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+    }
+    .chart-container {
+        position: relative;
+        width: 100%;
+        max-width: 500px;
+        height: 350px;
+        max-height: 400px;
+    }
+    #matrix-chart-container {
+        height: 550px;
+        max-height: 600px;
+    }
+    .interactive-canvas {
+        background-color: #111827;
+        border-radius: 0.75rem;
+        border: 4px solid #374151;
+    }
+    .btn-action {
+        font-family: 'Press Start 2P', cursive;
+        transition: all 0.2s;
+        border-radius: 0.5rem;
+        padding: 0.75rem 1rem;
+        font-size: 0.75rem;
+        color: #111827;
+    }
+    .btn-action:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+    .formula, .matrix, .norm { /* Estilos de fórmulas omitidos para brevidade */ }
+
+    /* ==========================================================================
+       Animação do Cabeçalho (Header)
+       ========================================================================== */
+    
+    header {
+        position: relative;
+        overflow-x: hidden;
+    }
+
+    /* Pac-Man Corredor */
+    .pacman-runner {
+        width: 32px;
+        height: 32px;
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        z-index: 10;
+        animation: move-across 15s linear infinite;
+    }
+    .pacman-runner .pacman-top,
+    .pacman-runner .pacman-bottom {
+        background-color: #FBBF24;
+        height: 16px;
+        width: 32px;
+        position: absolute;
+        left: 0;
+    }
+    .pacman-runner .pacman-top {
+        top: 0;
+        border-radius: 16px 16px 0 0;
+        transform-origin: bottom center;
+        animation: spin1 0.7s infinite linear;
+    }
+    .pacman-runner .pacman-bottom {
+        bottom: 0;
+        border-radius: 0 0 16px 16px;
+        transform-origin: top center;
+        animation: spin2 0.7s infinite linear;
+    }
+
+    /* Fantasmas Corredores "Pixel-Art" (SVG) */
+    .ghost-runner {
+        width: 30px;
+        height: 30px;
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        z-index: 9;
+        animation: 
+            ghost-float 1s ease-in-out infinite, 
+            move-across 15s linear infinite;
+    }
+    .ghost {
+        position: absolute;
+        width: 56px; 
+        height: 56px;
+        transform: scale(0.53); /* Reduz o fantasma de 56px para ~30px */
+        transform-origin: top left;
+    }
+    .ghost__body, .ghost__eye--left, .ghost__eye--right, .ghost__feet {
+        position: absolute;
+    }
+    .ghost__body { width: 56px; height: 48px; top: 0; left: 0; }
+    .ghost__eye--left, .ghost__eye--right { width: 16px; height: 20px; top: 16px; }
+    .ghost__eye--left { left: 8px; }
+    .ghost__eye--right { right: 8px; }
+    .ghost__eye--left svg polygon, .ghost__eye--right svg polygon { fill: white; }
+    .ghost__eye--left::after, .ghost__eye--right::after {
+        content: '';
+        display: block;
+        position: absolute;
+        width: 8px;
+        height: 8px;
+        background: #00008B; /* Pupila */
+        top: 8px;
+        left: 4px;
+    }
+    .ghost__feet { top: 48px; left: 0; width: 4px; height: 4px; z-index: 1; }
+
+    /* Cores e Atrasos Específicos */
+    .ghost-runner.blinky { animation-delay: -1s; }
+    .blinky .ghost__body svg polygon { fill: #EF4444; } /* Vermelho */
+    .blinky .ghost__feet { 
+        background: #EF4444;
+        animation: feet-blinky 0.4s steps(1) infinite;
+    }
+    .ghost-runner.inky { animation-delay: -1.8s; }
+    .inky .ghost__body svg polygon { fill: #06B6D4; } /* Ciano */
+    .inky .ghost__feet { 
+        background: #06B6D4;
+        animation: feet-inky 0.4s steps(1) infinite;
+    }
+
+    /* ==========================================================================
+       Keyframes das Animações
+       ========================================================================== */
+
+    /* Animação da boca do Pac-Man */
+    @keyframes spin1 { 0%, 100% { transform: rotate(0deg); } 50% { transform: rotate(-40deg); } }
+    @keyframes spin2 { 0%, 100% { transform: rotate(0deg); } 50% { transform: rotate(40deg); } }
+    @-webkit-keyframes spin1 { 0%, 100% { -webkit-transform: rotate(0deg); } 50% { -webkit-transform: rotate(-40deg); } }
+    @-webkit-keyframes spin2 { 0%, 100% { -webkit-transform: rotate(0deg); } 50% { -webkit-transform: rotate(40deg); } }
+
+    /* Animação de movimento (Esquerda para Direita) */
+    @keyframes move-across { 0% { left: -60px; } 100% { left: 100%; } }
+    @-webkit-keyframes move-across { 0% { left: -60px; } 100% { left: 100%; } }
+
+    /* Animação de flutuação dos fantasmas */
+    @keyframes ghost-float { 0%, 100% { transform: translateY(-53%); } 50% { transform: translateY(-47%); } }
+    @-webkit-keyframes ghost-float { 0%, 100% { -webkit-transform: translateY(-53%); } 50% { -webkit-transform: translateY(-47%); } }
+
+    /* Animações dos "pés" ondulantes dos fantasmas */
+    @keyframes feet-blinky {
+        0%, 100% { box-shadow: 4px 0 #EF4444, 8px 0 #EF4444, 12px 0 #EF4444, 4px 4px #EF4444, 8px 4px #EF4444, 20px 0 #EF4444, 24px 0 #EF4444, 28px 0 #EF4444, 32px 0 #EF4444, 24px 4px #EF4444, 28px 4px #EF4444, 40px 0 #EF4444, 44px 0 #EF4444, 48px 0 #EF4444, 52px 0 #EF4444, 44px 4px #EF4444, 48px 4px #EF4444; }
+        50% { box-shadow: 0 4px #EF4444, 4px 0 #EF4444, 12px 0 #EF4444, 16px 0 #EF4444, 20px 0 #EF4444, 16px 4px #EF4444, 20px 4px #EF4444, 32px 0 #EF4444, 36px 0 #EF4444, 40px 0 #EF4444, 32px 4px #EF4444, 36px 4px #EF4444, 48px 0 #EF4444, 52px 0 #EF4444, 52px 4px #EF4444; }
+    }
+    @keyframes feet-inky {
+        0%, 100% { box-shadow: 4px 0 #06B6D4, 8px 0 #06B6D4, 12px 0 #06B6D4, 4px 4px #06B6D4, 8px 4px #06B6D4, 20px 0 #06B6D4, 24px 0 #06B6D4, 28px 0 #06B6D4, 32px 0 #06B6D4, 24px 4px #06B6D4, 28px 4px #06B6D4, 40px 0 #06B6D4, 44px 0 #06B6D4, 48px 0 #06B6D4, 52px 0 #06B6D4, 44px 4px #06B6D4, 48px 4px #06B6D4; }
+        50% { box-shadow: 0 4px #06B6D4, 4px 0 #06B6D4, 12px 0 #06B6D4, 16px 0 #06B6D4, 20px 0 #06B6D4, 16px 4px #06B6D4, 20px 4px #06B6D4, 32px 0 #06B6D4, 36px 0 #06B6D4, 40px 0 #06B6D4, 32px 4px #06B6D4, 36px 4px #06B6D4, 48px 0 #06B6D4, 52px 0 #06B6D4, 52px 4px #06B6D4; }
+    }
+</style>
+
 </head>
 <body class="antialiased">
 
-    <header class="bg-white/80 backdrop-blur-lg sticky top-0 z-50 shadow-sm">
-        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
-            <h1 class="text-lg md:text-xl text-gray-800">Pac-Math</h1>
-            <div class="hidden md:flex space-x-8 text-sm font-semibold text-gray-600">
-                <a href="#jogo" class="nav-link">Jogo</a>
-                <a href="#vetores" class="nav-link">Vetores</a>
-                <a href="#operacoes" class="nav-link">Operações</a>
-                <a href="#norma" class="nav-link">Norma</a>
-                <a href="#matriz" class="nav-link">Matriz</a>
-                <a href="#glossario" class="nav-link">Glossário</a>
-                <a href="#como-rodar" class="nav-link">Como rodar</a>
+<header class="bg-white/80 backdrop-blur-lg sticky top-0 z-50 shadow-sm">
+    <div class="pacman-runner">
+        <div class="pacman-top"></div>
+        <div class="pacman-bottom"></div>
+    </div>
+
+        <div class="ghost-runner blinky">
+        <div class="ghost">
+            <div class="ghost__body">
+                <svg viewBox="0 0 56 48">
+                    <polygon points="0 24, 4 24, 4 12, 8 12, 8 8, 12 8, 12 4, 20 4, 20 0, 36 0, 36 4, 44 4, 44 8, 48 8, 48 12, 52 12, 52 24, 56 24, 56 48, 0 48 "/>
+                </svg>
             </div>
-        </nav>
-    </header>
+            <div class="ghost__eye--left">
+                <svg viewBox="0 0 16 20">
+                    <polygon points="4 0, 12 0, 12 4, 16 4, 16 16, 12 16, 12 20, 4 20, 4 16, 0 16, 0 4, 4 4 "/>
+                </svg>
+            </div>
+            <div class="ghost__eye--right">
+                <svg viewBox="0 0 16 20">
+                    <polygon points="4 0, 12 0, 12 4, 16 4, 16 16, 12 16, 12 20, 4 20, 4 16, 0 16, 0 4, 4 4 "/>
+                </svg>
+            </div>
+            <div class="ghost__feet"></div>
+        </div>
+    </div>
+    <div class="ghost-runner inky">
+        <div class="ghost">
+            <div class="ghost__body">
+                <svg viewBox="0 0 56 48">
+                    <polygon points="0 24, 4 24, 4 12, 8 12, 8 8, 12 8, 12 4, 20 4, 20 0, 36 0, 36 4, 44 4, 44 8, 48 8, 48 12, 52 12, 52 24, 56 24, 56 48, 0 48 "/>
+                </svg>
+            </div>
+            <div class="ghost__eye--left">
+                <svg viewBox="0 0 16 20">
+                    <polygon points="4 0, 12 0, 12 4, 16 4, 16 16, 12 16, 12 20, 4 20, 4 16, 0 16, 0 4, 4 4 "/>
+                </svg>
+            </div>
+            <div class="ghost__eye--right">
+                <svg viewBox="0 0 16 20">
+                    <polygon points="4 0, 12 0, 12 4, 16 4, 16 16, 12 16, 12 20, 4 20, 4 16, 0 16, 0 4, 4 4 "/>
+                </svg>
+            </div>
+            <div class="ghost__feet"></div>
+        </div>
+    </div>
+    
+    <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+        <h1 class="text-lg md:text-xl text-gray-800">Pac-Math</h1>
+        <div class="hidden md:flex space-x-8 text-sm font-semibold text-gray-600">
+            <a href="#jogo" class="nav-link">Jogo</a>
+            <a href="#vetores" class="nav-link">Vetores</a>
+            <a href="#operacoes" class="nav-link">Operações</a>
+            <a href="#norma" class="nav-link">Norma</a>
+            <a href="#matriz" class="nav-link">Matriz</a>
+            <a href="#glossario" class="nav-link">Glossário</a>
+            <a href="#como-rodar" class="nav-link">Como rodar</a>
+        </div>
+    </nav>
+</header>
 
     <main class="container mx-auto px-6 py-12">
         <section class="text-center my-12 md:my-20">
@@ -148,11 +295,17 @@
                             <li>Validação de movimento: <strong>matriz de adjacência</strong> do labirinto.</li>
                         </ul>
                         <div class="mt-6 p-3 bg-gray-50 border rounded">
-                            <p class="text-xs text-gray-500 mb-2">Como executar (Windows/PowerShell):</p>
-                            <pre class="bg-gray-900 text-gray-100 text-xs p-3 rounded overflow-x-auto"><code>cd c:\Users\lucas\IdeaProjects\capstone_algebra
+    <p class="text-xs text-gray-500 mb-2">Como obter e executar o jogo (requer Git e Python):</p>
+    <pre class="bg-gray-900 text-gray-100 text-xs p-3 rounded overflow-x-auto"><code>git clone https://github.com/Gabriel-Garcia152/capstone_algebra.git
+cd capstone_algebra
 python pacman.py</code></pre>
-                            <button id="copy-run" class="btn-action bg-[#10B981] mt-3">Copiar comando</button>
-                        </div>
+    <p class="text-xs text-gray-500 mt-2">Dica: Se o jogo não iniciar, experimente rodar <code>pip install pygame</code>.</p>
+    
+    <div class="flex space-x-2 mt-3">
+        <button id="copy-run" class="btn-action bg-[#10B981]">Copiar Comandos</button>
+        <a href="pacman.exe" download="pacman.exe" class="btn-action bg-[#3B82F6]" style="color: white; text-decoration: none;">Baixar .EXE</a>
+    </div>
+</div>
                     </div>
                     <div class="w-full flex justify-center">
                         <img src="pacmanlvl1.jpg" alt="Screenshot do nível do Pac-Man" class="rounded-lg border shadow max-h-[340px] object-contain" />
@@ -165,14 +318,14 @@ python pacman.py</code></pre>
                     <div>
                         <h3 class="text-xl mb-4 text-[#D97706]">01. Vetores: Descrevendo o Mundo</h3>
                         <p class="mb-4 text-gray-600 leading-relaxed">
-                            A primeira abstração foi representar a posição e a direção. Em vez de coordenadas `(x, y)`, tratamos o Pac-Man como um <strong>vetor de posição</strong>
+                            A primeira abstração foi representar a posição e a direção. Em vez de coordenadas \( (x, y) \), tratamos o Pac-Man como um <strong>vetor de posição</strong>
                            \( \vec{p} = \begin{bmatrix} x \\ y \end{bmatrix} \)
                             O movimento é um <strong>vetor de direção</strong>, como
                             \( \vec{d} = \begin{bmatrix} 1 \\ 0 \end{bmatrix} \)
                             para a direita.
                         </p>
                         <p class="mb-4 text-gray-600 leading-relaxed">
-                            No jogo, a nova posição é calculada por \( \vec{p}' = \vec{p} + v \cdot \vec{d} \), onde \(v\) é a velocidade. Em um grid, \(\vec{d}\) costuma ser um dos vetores base: (1,0), (-1,0), (0,1), (0,-1).
+                            No jogo, a nova posição é calculada por \( \vec{p}' = \vec{p} + v \cdot \vec{d} \), onde \(v\) é a velocidade. Em um grid, \(\vec{d}\) costuma ser um dos vetores base: \( (1,0), \; (-1,0), \; (0,1), \; (0,-1) \).
                         </p>
                         <div class="bg-gray-50 border rounded p-3 text-xs text-gray-700">
                             <p class="font-semibold mb-2">Código (conceito em Python):</p>
@@ -194,7 +347,7 @@ px, py = px + dx*speed, py + dy*speed</code></pre>
                     </div>
                     <div class="chart-container mx-auto">
                         <canvas id="vectorCanvas" class="interactive-canvas w-full h-full"></canvas>
-                        <div class="text-center text-xs text-gray-500 mt-2">d⃗ = (dx, dy)</div>
+                        <div class="text-center text-xs text-gray-500 mt-2">\( \vec{d} = (d_x, d_y) \)</div>
                     </div>
                 </div>
             </section>
@@ -245,8 +398,15 @@ gx, gy = gx + dx, gy + dy</code></pre>
                             \[ \text{dist} = \left\|\vec{p}_{\text{alvo}} - \vec{p}_{\text{fantasma}}\right\| \]
                         </p>
                         <p class="mb-4 text-gray-600 leading-relaxed">
-                            Em grids, duas métricas são comuns: <strong>Euclidiana:</strong> \(\sqrt{(\Delta x)^2 + (\Delta y)^2}\) e <strong>Manhattan:</strong> \(|\Delta x| + |\Delta y|\). A Euclidiana favorece a reta; a Manhattan favorece caminhos ortogonais. O jogo pode adotar qualquer uma nas comparações.
-                        </p>
+<p>
+    Em grids, duas métricas são comuns:
+    <br>
+    <strong>Euclidiana:</strong> \( \sqrt{(\Delta x)^2 + (\Delta y)^2} \) favorece o caminho em linha reta.
+    <br>
+    <strong>Manhattan:</strong> \( |\Delta x| + |\Delta y| \) favorece caminhos ortogonais.
+    <br>
+    O jogo pode adotar qualquer uma nas comparações.
+</p>                        </p>
                         <div class="bg-gray-50 border rounded p-3 text-xs text-gray-700">
                             <p class="font-semibold mb-2">Código (conceito em Python):</p>
                             <pre class="bg-gray-900 text-gray-100 p-3 rounded overflow-x-auto"><code>from math import hypot
@@ -273,34 +433,36 @@ melhor = min(opcoes_de_caminho, key=lambda p: dist_euclid(p, alvo))</code></pre>
             </section>
 
             <section id="matriz" class="card">
-                <div class="grid md:grid-cols-2 gap-12 items-center">
-                    <div class="md:order-last">
-                        <h3 class="text-xl mb-4 text-[#F59E0B]">04. Matriz: A Estrutura do Labirinto</h3>
-                        <p class="mb-4 text-gray-600 leading-relaxed">
-                           O labirinto é um <strong>grafo</strong>, representado por uma <strong>matriz de adjacência</strong>. Se \( \displaystyle A[i][j] = 1 \), há um caminho do ponto `i` ao `j`. Se for `0`, há uma parede. Uma consulta simples valida qualquer movimento.
-                        </p>
-                        <div class="bg-gray-50 border rounded p-3 text-xs text-gray-700">
-                            <p class="font-semibold mb-2">Código (conceito em Python):</p>
-                            <pre class="bg-gray-900 text-gray-100 p-3 rounded overflow-x-auto"><code># matriz A com 0/1
-def pode_mover(A, i, j):
-    return A[i][j] == 1
+    <div class="grid md:grid-cols-2 gap-12 items-center">
+        <div class="md:order-last">
+            <h3 class="text-xl mb-4 text-[#F59E0B]">04. Matriz: A Estrutura do Labirinto</h3>
+            <p class="mb-4 text-gray-600 leading-relaxed">
+                A estrutura do labirinto é definida por uma <strong>matriz</strong> que funciona como um mapa detalhado. Cada número na matriz especifica o tipo de peça: valores de <strong>0 a 2</strong> são caminhos livres, enquanto valores a partir de <strong>3</strong> são paredes. A validação de um movimento é uma consulta direta a esta matriz.
+            </p>
+            <div class="bg-gray-50 border rounded p-3 text-xs text-gray-700">
+                <p class="font-semibold mb-2">Código (conceito em Python):</p>
+                <pre class="bg-gray-900 text-gray-100 p-3 rounded overflow-x-auto"><code># board = matriz com a estrutura do labirinto
+def pode_mover(board, linha, coluna):
+    return board[linha][coluna] < 3
 
 # exemplo de validação
-if pode_mover(A, no_atual, prox_no):
-    no_atual = prox_no</code></pre>
-                        </div>
-                        <p class="text-gray-500">
-                           Passe o mouse sobre os nós (círculos) no mapa para destacar as conexões na matriz.
-                        </p>
-                    </div>
-                    <div class="chart-container mx-auto">
-                        <div class="flex flex-col items-center justify-center h-full">
-                            <canvas id="matrixCanvas" class="interactive-canvas w-full h-[60%]"></canvas>
-                            <div id="matrix-display" class="mt-4 font-mono text-xs md:text-sm bg-gray-800 text-white p-2 rounded w-auto"></div>
-                        </div>
+if pode_mover(board, proxima_linha, proxima_coluna):
+    # Personagem pode se mover
+    pass</code></pre>
+            </div>
+        </div>
+        <div id="matrix-chart-container" class="chart-container mx-auto flex flex-col items-center">
+                <canvas id="matrixCanvas" class="interactive-canvas w-full h-[85%] max-w-md"></canvas>
+                <div class="mt-4 bg-gray-800 p-3 rounded-lg w-full max-w-xs flex flex-col items-center text-center">
+                    <canvas id="pieceDetailCanvas" class="bg-gray-900 rounded" width="56" height="56"></canvas>
+                    <div id="matrix-display-text" class="font-mono text-xs text-white text-left flex-grow">
+                        Passe o mouse sobre a grade para ver os detalhes.
                     </div>
                 </div>
-            </section>
+            </div>
+        </div>
+    </div>
+</section>
 
             <!-- Glossário -->
             <section id="glossario" class="card">
@@ -313,290 +475,462 @@ if pode_mover(A, no_atual, prox_no):
                 </ul>
             </section>
 
-            <!-- Como rodar -->
-            <section id="como-rodar" class="card">
-                <h3 class="text-xl mb-4 text-[#111827]">Como rodar o jogo localmente</h3>
-                <ol class="list-decimal pl-6 text-gray-600 space-y-2">
-                    <li>Abra o PowerShell.</li>
-                    <li>Navegue até a pasta do projeto:</li>
-                </ol>
-                <pre class="bg-gray-900 text-gray-100 text-xs p-3 rounded overflow-x-auto mt-2"><code>cd c:\Users\lucas\IdeaProjects\capstone_algebra</code></pre>
-                <ol start="3" class="list-decimal pl-6 text-gray-600 space-y-2 mt-2">
-                    <li>Execute o jogo:</li>
-                </ol>
-                <pre class="bg-gray-900 text-gray-100 text-xs p-3 rounded overflow-x-auto mt-2"><code>python pacman.py</code></pre>
-                <p class="text-xs text-gray-500 mt-3">Dica: se <code>python</code> não funcionar, tente <code>py pacman.py</code>.</p>
-            </section>
         </div>
     </main>
 
     <footer class="text-center py-10 mt-20 bg-gray-900 text-gray-400 text-sm">
-        <p>Infográfico interativo baseado no relatório "A Matemática por Trás do Fantasma".</p>
     </footer>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const setupCanvas = (canvas) => {
-                if (!canvas) return null;
-                const dpr = window.devicePixelRatio || 1;
-                const rect = canvas.getBoundingClientRect();
-                canvas.width = rect.width * dpr;
-                canvas.height = rect.height * dpr;
-                const ctx = canvas.getContext('2d');
-                ctx.scale(dpr, dpr);
-                return ctx;
-            };
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // =================================================================================
+        // --- FUNÇÕES AUXILIARES GLOBAIS ---
+        // (Estas funções são usadas por múltiplas seções do infográfico)
+        // =================================================================================
 
-            function drawPacman(ctx, x, y, radius, openAngle) {
-                ctx.fillStyle = '#FBBF24';
-                ctx.beginPath();
-                ctx.arc(x, y, radius, openAngle, Math.PI * 2 - openAngle);
-                ctx.lineTo(x, y);
-                ctx.closePath();
-                ctx.fill();
-            }
+        /**
+         * Configura um canvas para renderização em alta densidade de pixels (HiDPI/Retina).
+         * @param {HTMLCanvasElement} canvas - O elemento canvas a ser configurado.
+         * @returns {CanvasRenderingContext2D|null} O contexto 2D do canvas ou null se o canvas não existir.
+         */
+        const setupCanvas = (canvas) => {
+            if (!canvas) return null;
+            const dpr = window.devicePixelRatio || 1;
+            const rect = canvas.getBoundingClientRect();
+            // Usa os atributos width/height do HTML se definidos, senão usa o tamanho do CSS
+            const width = canvas.getAttribute('width') || rect.width;
+            const height = canvas.getAttribute('height') || rect.height;
+            canvas.width = width * dpr;
+            canvas.height = height * dpr;
+            const ctx = canvas.getContext('2d');
+            ctx.scale(dpr, dpr);
+            return ctx;
+        };
 
-            function drawGhost(ctx, x, y, radius, color) {
-                ctx.fillStyle = color;
-                ctx.beginPath();
-                ctx.arc(x, y, radius, Math.PI, 0);
-                const base_y = y + radius * 1.2;
-                ctx.lineTo(x + radius, base_y);
-                ctx.lineTo(x + radius * 0.6, base_y - radius * 0.4);
-                ctx.lineTo(x + radius * 0.2, base_y);
-                ctx.lineTo(x - radius * 0.2, base_y - radius * 0.4);
-                ctx.lineTo(x - radius * 0.6, base_y);
-                ctx.lineTo(x - radius, base_y - radius * 0.4);
-                ctx.lineTo(x - radius, y);
-                ctx.closePath();
-                ctx.fill();
-                
-                ctx.fillStyle = 'white';
-                ctx.beginPath();
-                ctx.arc(x - radius/2.5, y - radius/5, radius/3, 0, Math.PI*2);
-                ctx.arc(x + radius/2.5, y - radius/5, radius/3, 0, Math.PI*2);
-                ctx.fill();
+        /**
+         * Desenha o personagem Pac-Man.
+         */
+        function drawPacman(ctx, x, y, radius, openAngle) {
+            ctx.fillStyle = '#FBBF24';
+            ctx.beginPath();
+            ctx.arc(x, y, radius, openAngle, Math.PI * 2 - openAngle);
+            ctx.lineTo(x, y);
+            ctx.closePath();
+            ctx.fill();
+        }
 
-                ctx.fillStyle = 'black';
-                ctx.beginPath();
-                ctx.arc(x - radius/2.5, y - radius/5, radius/6, 0, Math.PI*2);
-                ctx.arc(x + radius/2.5, y - radius/5, radius/6, 0, Math.PI*2);
-                ctx.fill();
-            }
+        /**
+         * Desenha um fantasma.
+         */
+        function drawGhost(ctx, x, y, radius, color) {
+            ctx.fillStyle = color;
+            ctx.beginPath();
+            ctx.arc(x, y, radius, Math.PI, 0);
+            const base_y = y + radius * 1.2;
+            ctx.lineTo(x + radius, base_y);
+            ctx.lineTo(x + radius * 0.6, base_y - radius * 0.4);
+            ctx.lineTo(x + radius * 0.2, base_y);
+            ctx.lineTo(x - radius * 0.2, base_y - radius * 0.4);
+            ctx.lineTo(x - radius * 0.6, base_y);
+            ctx.lineTo(x - radius, base_y - radius * 0.4);
+            ctx.lineTo(x - radius, y);
+            ctx.closePath();
+            ctx.fill();
 
-            function drawVector(ctx, fromX, fromY, toX, toY, color, lineWidth = 3) {
-                const headlen = 10;
-                const dx = toX - fromX;
-                const dy = toY - fromY;
-                const angle = Math.atan2(dy, dx);
-                ctx.strokeStyle = color;
-                ctx.lineWidth = lineWidth;
-                ctx.beginPath();
-                ctx.moveTo(fromX, fromY);
-                ctx.lineTo(toX, toY);
-                ctx.stroke();
-                ctx.beginPath();
-                ctx.moveTo(toX, toY);
-                ctx.lineTo(toX - headlen * Math.cos(angle - Math.PI / 6), toY - headlen * Math.sin(angle - Math.PI / 6));
-                ctx.moveTo(toX, toY);
-                ctx.lineTo(toX - headlen * Math.cos(angle + Math.PI / 6), toY - headlen * Math.sin(angle + Math.PI / 6));
-                ctx.stroke();
-            }
+            ctx.fillStyle = 'white';
+            ctx.beginPath();
+            ctx.arc(x - radius / 2.5, y - radius / 5, radius / 3, 0, Math.PI * 2);
+            ctx.arc(x + radius / 2.5, y - radius / 5, radius / 3, 0, Math.PI * 2);
+            ctx.fill();
 
-            const vCanvas = document.getElementById('vectorCanvas');
-            let vCtx = setupCanvas(vCanvas);
-            const pacmanPos = { x: vCanvas.clientWidth / 2, y: vCanvas.clientHeight / 2 };
+            ctx.fillStyle = 'black';
+            ctx.beginPath();
+            ctx.arc(x - radius / 2.5, y - radius / 5, radius / 6, 0, Math.PI * 2);
+            ctx.arc(x + radius / 2.5, y - radius / 5, radius / 6, 0, Math.PI * 2);
+            ctx.fill();
+        }
+
+        /**
+         * Desenha um vetor (seta) de um ponto a outro.
+         */
+        function drawVector(ctx, fromX, fromY, toX, toY, color, lineWidth = 3) {
+            const headlen = 10;
+            const dx = toX - fromX;
+            const dy = toY - fromY;
+            const angle = Math.atan2(dy, dx);
+            ctx.strokeStyle = color;
+            ctx.lineWidth = lineWidth;
+            ctx.beginPath();
+            ctx.moveTo(fromX, fromY);
+            ctx.lineTo(toX, toY);
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.moveTo(toX, toY);
+            ctx.lineTo(toX - headlen * Math.cos(angle - Math.PI / 6), toY - headlen * Math.sin(angle - Math.PI / 6));
+            ctx.moveTo(toX, toY);
+            ctx.lineTo(toX - headlen * Math.cos(angle + Math.PI / 6), toY - headlen * Math.sin(angle + Math.PI / 6));
+            ctx.stroke();
+        }
+
+        // =================================================================================
+        // --- SEÇÃO 01: VETORES ---
+        // =================================================================================
+
+        const vCanvas = document.getElementById('vectorCanvas');
+        let vCtx;
 
         function drawVectorScene(direction = null) {
-                if (!vCtx) return;
-                vCtx.clearRect(0, 0, vCanvas.width, vCanvas.height);
-                drawPacman(vCtx, vCanvas.clientWidth / 2, vCanvas.clientHeight / 2, 25, 0.35);
-                if (direction) {
-                    drawVector(vCtx, vCanvas.clientWidth / 2, vCanvas.clientHeight / 2, vCanvas.clientWidth / 2 + direction.x * 60, vCanvas.clientHeight / 2 + direction.y * 60, '#3B82F6');
-            vCtx.fillStyle = '#9CA3AF';
-            vCtx.font = '10px "Press Start 2P"';
-            vCtx.textAlign = 'left';
-            vCtx.fillText(`d=(${direction.x}, ${direction.y})`, 8, 16);
+            if (!vCtx) return;
+            vCtx.clearRect(0, 0, vCanvas.clientWidth, vCanvas.clientHeight);
+            drawPacman(vCtx, vCanvas.clientWidth / 2, vCanvas.clientHeight / 2, 25, 0.35);
+            if (direction) {
+                drawVector(vCtx, vCanvas.clientWidth / 2, vCanvas.clientHeight / 2, vCanvas.clientWidth / 2 + direction.x * 60, vCanvas.clientHeight / 2 + direction.y * 60, '#3B82F6');
+                vCtx.fillStyle = '#9CA3AF';
+                vCtx.font = '10px "Press Start 2P"';
+                vCtx.textAlign = 'left';
+                vCtx.fillText(`d=(${direction.x}, ${direction.y})`, 8, 16);
+            }
+        }
+
+        document.getElementById('dir-up').addEventListener('mouseenter', () => drawVectorScene({ x: 0, y: -1 }));
+        document.getElementById('dir-down').addEventListener('mouseenter', () => drawVectorScene({ x: 0, y: 1 }));
+        document.getElementById('dir-left').addEventListener('mouseenter', () => drawVectorScene({ x: -1, y: 0 }));
+        document.getElementById('dir-right').addEventListener('mouseenter', () => drawVectorScene({ x: 1, y: 0 }));
+        [...document.querySelectorAll('#dir-up, #dir-down, #dir-left, #dir-right')].forEach(el => {
+            el.addEventListener('mouseleave', () => drawVectorScene());
+        });
+
+        // =================================================================================
+        // --- SEÇÃO 02: OPERAÇÕES ---
+        // =================================================================================
+
+        const opsCanvas = document.getElementById('opsCanvas');
+        let opsCtx;
+
+        function drawOpsScene(showVector = false) {
+            if (!opsCtx) return;
+            const opsPacman = { x: opsCanvas.clientWidth * 0.7, y: opsCanvas.clientHeight * 0.4 };
+            const opsGhost = { x: opsCanvas.clientWidth * 0.3, y: opsCanvas.clientHeight * 0.6 };
+            opsCtx.clearRect(0, 0, opsCanvas.clientWidth, opsCanvas.clientHeight);
+            drawPacman(opsCtx, opsPacman.x, opsPacman.y, 25, 0.35);
+            drawGhost(opsCtx, opsGhost.x, opsGhost.y, 25, '#EF4444');
+            if (showVector) {
+                drawVector(opsCtx, opsGhost.x, opsGhost.y, opsPacman.x, opsPacman.y, '#F472B6');
+            }
+        }
+        document.getElementById('calc-chase').addEventListener('click', () => drawOpsScene(true));
+
+        // =================================================================================
+        // --- SEÇÃO 03: NORMA ---
+        // =================================================================================
+
+        const normCanvas = document.getElementById('normCanvas');
+        let normCtx;
+
+        function drawNormScene(decision = false) {
+            if (!normCtx) return;
+            const normTarget = { x: normCanvas.clientWidth * 0.85, y: normCanvas.clientHeight / 2 };
+            const normGhost = { x: normCanvas.clientWidth * 0.15, y: normCanvas.clientHeight / 2 };
+            const path1 = { x: normCanvas.clientWidth * 0.5, y: normCanvas.clientHeight * 0.25 };
+            const path2 = { x: normCanvas.clientWidth * 0.5, y: normCanvas.clientHeight * 0.75 };
+
+            normCtx.clearRect(0, 0, normCanvas.clientWidth, normCanvas.clientHeight);
+            normCtx.strokeStyle = '#4A5568';
+            normCtx.lineWidth = 4;
+            normCtx.setLineDash([5, 5]);
+            normCtx.beginPath();
+            normCtx.moveTo(normGhost.x, normGhost.y);
+            normCtx.lineTo(path1.x, path1.y);
+            normCtx.stroke();
+            normCtx.beginPath();
+            normCtx.moveTo(normGhost.x, normGhost.y);
+            normCtx.lineTo(path2.x, path2.y);
+            normCtx.stroke();
+            normCtx.setLineDash([]);
+            drawPacman(normCtx, normTarget.x, normTarget.y, 20, 0.35);
+            drawGhost(normCtx, normGhost.x, normGhost.y, 20, '#06B6D4');
+
+            if (decision) {
+                const dist1 = Math.hypot(normTarget.x - path1.x, normTarget.y - path1.y);
+                const dist2 = Math.hypot(normTarget.x - path2.x, normTarget.y - path2.y);
+
+                normCtx.font = '10px "Press Start 2P"';
+                normCtx.fillStyle = '#6B7280';
+                normCtx.textAlign = 'center';
+                normCtx.fillText(`d=${dist1.toFixed(0)}`, (path1.x + normTarget.x) / 2, (path1.y + normTarget.y) / 2 - 10);
+                drawVector(normCtx, path1.x, path1.y, normTarget.x, normTarget.y, '#6B7280', 2);
+
+                normCtx.fillText(`d=${dist2.toFixed(0)}`, (path2.x + normTarget.x) / 2, (path2.y + normTarget.y) / 2 + 20);
+                drawVector(normCtx, path2.x, path2.y, normTarget.x, normTarget.y, '#6B7280', 2);
+
+                if (dist1 < dist2) {
+                    drawVector(normCtx, normGhost.x, normGhost.y, path1.x, path1.y, '#06B6D4', 4);
+                } else {
+                    drawVector(normCtx, normGhost.x, normGhost.y, path2.x, path2.y, '#06B6D4', 4);
                 }
             }
-            
-            document.getElementById('dir-up').addEventListener('mouseenter', () => drawVectorScene({x: 0, y: -1}));
-            document.getElementById('dir-down').addEventListener('mouseenter', () => drawVectorScene({x: 0, y: 1}));
-            document.getElementById('dir-left').addEventListener('mouseenter', () => drawVectorScene({x: -1, y: 0}));
-            document.getElementById('dir-right').addEventListener('mouseenter', () => drawVectorScene({x: 1, y: 0}));
-            [...document.querySelectorAll('#dir-up, #dir-down, #dir-left, #dir-right')].forEach(el => {
-                el.addEventListener('mouseleave', () => drawVectorScene());
-            });
+        }
+        document.getElementById('calc-norm').addEventListener('click', () => drawNormScene(true));
 
-            const opsCanvas = document.getElementById('opsCanvas');
-            let opsCtx = setupCanvas(opsCanvas);
+        // =================================================================================
+        // --- SEÇÃO 04: MATRIZ ---
+        // =================================================================================
+
+        const matrixCanvas = document.getElementById('matrixCanvas');
+        const pieceDetailCanvas = document.getElementById('pieceDetailCanvas');
+        const matrixDisplayText = document.getElementById('matrix-display-text');
+        let matrixCtx, pieceDetailCtx;
+
+        const tileMap = [
+            [6, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 5],
+[3, 6, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 5, 6, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 5, 3],
+[3, 3, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 3, 3, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 3, 3],
+[3, 3, 1, 6, 4, 4, 5, 1, 6, 4, 4, 4, 5, 1, 3, 3, 1, 6, 4, 4, 4, 5, 1, 6, 4, 4, 5, 1, 3, 3],
+[3, 3, 2, 3, 0, 0, 3, 1, 3, 0, 0, 0, 3, 1, 3, 3, 1, 3, 0, 0, 0, 3, 1, 3, 0, 0, 3, 2, 3, 3],
+[3, 3, 1, 7, 4, 4, 8, 1, 7, 4, 4, 4, 8, 1, 7, 8, 1, 7, 4, 4, 4, 8, 1, 7, 4, 4, 8, 1, 3, 3],
+[3, 3, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 3, 3],
+[3, 3, 1, 6, 4, 4, 5, 1, 6, 5, 1, 6, 4, 4, 4, 4, 4, 4, 5, 1, 6, 5, 1, 6, 4, 4, 5, 1, 3, 3],
+[3, 3, 1, 7, 4, 4, 8, 1, 3, 3, 1, 7, 4, 4, 5, 6, 4, 4, 8, 1, 3, 3, 1, 7, 4, 4, 8, 1, 3, 3],
+[3, 3, 1, 1, 1, 1, 1, 1, 3, 3, 1, 1, 1, 1, 3, 3, 1, 1, 1, 1, 3, 3, 1, 1, 1, 1, 1, 1, 3, 3],
+[3, 7, 4, 4, 4, 4, 5, 1, 3, 7, 4, 4, 5, 0, 3, 3, 0, 6, 4, 4, 8, 3, 1, 6, 4, 4, 4, 4, 8, 3],
+[3, 0, 0, 0, 0, 0, 3, 1, 3, 6, 4, 4, 8, 0, 7, 8, 0, 7, 4, 4, 5, 3, 1, 3, 0, 0, 0, 0, 0, 3],
+[3, 0, 0, 0, 0, 0, 3, 1, 3, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 1, 3, 0, 0, 0, 0, 0, 3],
+[8, 0, 0, 0, 0, 0, 3, 1, 3, 3, 0, 6, 4, 4, 9, 9, 4, 4, 5, 0, 3, 3, 1, 3, 0, 0, 0, 0, 0, 7],
+[4, 4, 4, 4, 4, 4, 8, 1, 7, 8, 0, 3, 0, 0, 0, 0, 0, 0, 3, 0, 7, 8, 1, 7, 4, 4, 4, 4, 4, 4],
+[0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0],
+[4, 4, 4, 4, 4, 4, 5, 1, 6, 5, 0, 3, 0, 0, 0, 0, 0, 0, 3, 0, 6, 5, 1, 6, 4, 4, 4, 4, 4, 4],
+[5, 0, 0, 0, 0, 0, 3, 1, 3, 3, 0, 7, 4, 4, 4, 4, 4, 4, 8, 0, 3, 3, 1, 3, 0, 0, 0, 0, 0, 6],
+[3, 0, 0, 0, 0, 0, 3, 1, 3, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 1, 3, 0, 0, 0, 0, 0, 3],
+[3, 0, 0, 0, 0, 0, 3, 1, 3, 3, 0, 6, 4, 4, 4, 4, 4, 4, 5, 0, 3, 3, 1, 3, 0, 0, 0, 0, 0, 3],
+[3, 6, 4, 4, 4, 4, 8, 1, 7, 8, 0, 7, 4, 4, 5, 6, 4, 4, 8, 0, 7, 8, 1, 7, 4, 4, 4, 4, 5, 3],
+[3, 3, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 3, 3, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 3, 3],
+[3, 3, 1, 6, 4, 4, 5, 1, 6, 4, 4, 4, 5, 1, 3, 3, 1, 6, 4, 4, 4, 5, 1, 6, 4, 4, 5, 1, 3, 3],
+[3, 3, 1, 7, 4, 5, 3, 1, 7, 4, 4, 4, 8, 1, 7, 8, 1, 7, 4, 4, 4, 8, 1, 3, 6, 4, 8, 1, 3, 3],
+[3, 3, 2, 1, 1, 3, 3, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 3, 3, 1, 1, 2, 3, 3],
+[3, 7, 4, 5, 1, 3, 3, 1, 6, 5, 1, 6, 4, 4, 4, 4, 4, 4, 5, 1, 6, 5, 1, 3, 3, 1, 6, 4, 8, 3],
+[3, 6, 4, 8, 1, 7, 8, 1, 3, 3, 1, 7, 4, 4, 5, 6, 4, 4, 8, 1, 3, 3, 1, 7, 8, 1, 7, 4, 5, 3],
+[3, 3, 1, 1, 1, 1, 1, 1, 3, 3, 1, 1, 1, 1, 3, 3, 1, 1, 1, 1, 3, 3, 1, 1, 1, 1, 1, 1, 3, 3],
+[3, 3, 1, 6, 4, 4, 4, 4, 8, 7, 4, 4, 5, 1, 3, 3, 1, 6, 4, 4, 8, 7, 4, 4, 4, 4, 5, 1, 3, 3],
+[3, 3, 1, 7, 4, 4, 4, 4, 4, 4, 4, 4, 8, 1, 7, 8, 1, 7, 4, 4, 4, 4, 4, 4, 4, 4, 8, 1, 3, 3],
+[3, 3, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 3, 3],
+[3, 7, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 8, 3],
+[7, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 8]
+         ]
+
+        const tileDescriptions = {
+            0: "Caminho Vazio", 1: "Caminho com Ponto", 2: "Caminho com Ponto de Poder",
+            3: "Parede Vertical", 4: "Parede Horizontal", 5: "Parede - Canto Sup. Direito",
+            6: "Parede - Canto Sup. Esquerdo", 7: "Parede - Canto Inf. Esquerdo", 8: "Parede - Canto Inf. Direito"
+        };
+
+        let highlightType = null;
+
+        /**
+         * Função auxiliar que contém a lógica de desenho para cada tipo de peça.
+         * Desenha a peça em uma posição (x, y) e com um tamanho (size) específicos.
+         * @param {CanvasRenderingContext2D} ctx - O contexto do canvas para desenhar.
+         * @param {string} tileValue - O número da peça (ex: '1', '6').
+         * @param {number} x - A coordenada X do canto superior esquerdo da célula.
+         * @param {number} y - A coordenada Y do canto superior esquerdo da célula.
+         * @param {number} size - A largura e altura da célula.
+         */
+        /**
+         * Função auxiliar que desenha APENAS as formas das paredes.
+         * Os pontos e caminhos agora são representados pelos números.
+         */
+        function drawTinyMazePiece(ctx, tileValue, x, y, size) {
+            // Paleta de cores clássica do Pac-Man
+            const wallColor = '#3B82F6'; // Azul vibrante para paredes
+
+            const center_x = x + size / 2;
+            const center_y = y + size / 2;
             
-            function drawOpsScene(showVector = false) {
-                if (!opsCtx) return;
-                const opsPacman = { x: opsCanvas.clientWidth * 0.7, y: opsCanvas.clientHeight * 0.4 };
-                const opsGhost = { x: opsCanvas.clientWidth * 0.3, y: opsCanvas.clientHeight * 0.6 };
-                opsCtx.clearRect(0, 0, opsCanvas.width, opsCanvas.height);
-                drawPacman(opsCtx, opsPacman.x, opsPacman.y, 25, 0.35);
-                drawGhost(opsCtx, opsGhost.x, opsGhost.y, 25, '#EF4444');
-                if (showVector) {
-                    drawVector(opsCtx, opsGhost.x, opsGhost.y, opsPacman.x, opsPacman.y, '#F472B6');
-                }
+            ctx.lineWidth = Math.max(1.5, size * 0.15); // Espessura das paredes
+            ctx.strokeStyle = wallColor;
+            
+            // Desenha apenas as formas das paredes
+            switch (parseInt(tileValue)) {
+                case 3: // Parede Vertical
+                    ctx.beginPath();
+                    ctx.moveTo(center_x, y);
+                    ctx.lineTo(center_x, y + size);
+                    ctx.stroke();
+                    break;
+                case 4: // Parede Horizontal
+                    ctx.beginPath();
+                    ctx.moveTo(x, center_y);
+                    ctx.lineTo(x + size, center_y);
+                    ctx.stroke();
+                    break;
+                case 5: // Canto Superior Direito
+                    ctx.beginPath();
+                    ctx.arc(x, y + size, size / 2, -Math.PI / 2, 0);
+                    ctx.stroke();
+                    break;
+                case 6: // Canto Superior Esquerdo
+                    ctx.beginPath();
+                    ctx.arc(x + size, y + size, size / 2, Math.PI, -Math.PI / 2);
+                    ctx.stroke();
+                    break;
+                case 7: // Canto Inferior Esquerdo
+                    ctx.beginPath();
+                    ctx.arc(x + size, y, size / 2, Math.PI / 2, Math.PI);
+                    ctx.stroke();
+                    break;
+                case 8: // Canto Inferior Direito
+                    ctx.beginPath();
+                    ctx.arc(x, y, size / 2, 0, Math.PI / 2);
+                    ctx.stroke();
+                    break;
+                // Os casos para 0, 1 e 2 foram removidos intencionalmente.
             }
-            document.getElementById('calc-chase').addEventListener('click', () => drawOpsScene(true));
-            
-            const normCanvas = document.getElementById('normCanvas');
-            let normCtx = setupCanvas(normCanvas);
+        }
 
-            function drawNormScene(decision = false) {
-                if (!normCtx) return;
-                const normTarget = { x: normCanvas.clientWidth * 0.85, y: normCanvas.clientHeight / 2 };
-                const normGhost = { x: normCanvas.clientWidth * 0.15, y: normCanvas.clientHeight / 2 };
-                const path1 = { x: normCanvas.clientWidth * 0.5, y: normCanvas.clientHeight * 0.25 };
-                const path2 = { x: normCanvas.clientWidth * 0.5, y: normCanvas.clientHeight * 0.75 };
+        /**
+         * Desenha a peça em destaque na área de detalhes.
+         * Esta função agora simplesmente chama a função auxiliar.
+         */
+        function drawMazePiece(ctx, tileValue, size) {
+            if (!ctx) return;
+            // Limpa o canvas de detalhes com um fundo escuro
+            ctx.fillStyle = '#111827';
+            ctx.fillRect(0, 0, size, size);
+            // Chama a função de desenho principal
+            drawTinyMazePiece(ctx, tileValue, 0, 0, size);
+        }
 
-                normCtx.clearRect(0, 0, normCanvas.width, normCanvas.height);
-                normCtx.strokeStyle = '#4A5568';
-                normCtx.lineWidth = 4;
-                normCtx.setLineDash([5, 5]);
-                normCtx.beginPath();
-                normCtx.moveTo(normGhost.x, normGhost.y);
-                normCtx.lineTo(path1.x, path1.y);
-                normCtx.stroke();
-                normCtx.beginPath();
-                normCtx.moveTo(normGhost.x, normGhost.y);
-                normCtx.lineTo(path2.x, path2.y);
-                normCtx.stroke();
-                normCtx.setLineDash([]);
-                drawPacman(normCtx, normTarget.x, normTarget.y, 20, 0.35);
-                drawGhost(normCtx, normGhost.x, normGhost.y, 20, '#06B6D4');
-                
-                if (decision) {
-                    const dist1 = Math.hypot(normTarget.x - path1.x, normTarget.y - path1.y);
-                    const dist2 = Math.hypot(normTarget.x - path2.x, normTarget.y - path2.y);
+        /**
+         * Desenha o labirinto completo no canvas principal, peça por peça.
+         */
+        /**
+         * Desenha o labirinto completo e, em seguida, os números por cima.
+         */
+        function drawTileMapScene() {
+            if (!matrixCtx) return;
+            const rows = tileMap.length;
+            const cols = tileMap[0].length;
+            const canvasWidth = matrixCanvas.clientWidth;
+            const canvasHeight = matrixCanvas.clientHeight;
+            const cellSize = Math.min(canvasWidth / cols, canvasHeight / rows);
+            const offsetX = (canvasWidth - cols * cellSize) / 2;
+            const offsetY = (canvasHeight - rows * cellSize) / 2;
+
+            // Define o fundo do labirinto como preto
+            matrixCtx.fillStyle = '#000000';
+            matrixCtx.fillRect(0, 0, canvasWidth, canvasHeight);
+
+            // Prepara a formatação do texto
+            matrixCtx.font = `bold ${cellSize * 0.6}px monospace`;
+            matrixCtx.textAlign = 'center';
+            matrixCtx.textBaseline = 'middle';
+
+            // Itera por toda a matriz para desenhar peças e números
+            for (let row = 0; row < rows; row++) {
+                for (let col = 0; col < cols; col++) {
+                    const tileValue = tileMap[row][col];
+                    const x = col * cellSize + offsetX;
+                    const y = row * cellSize + offsetY;
                     
-                    normCtx.font = '10px "Press Start 2P"';
-                    normCtx.fillStyle = '#6B7280';
-                    normCtx.textAlign = 'center';
-                    normCtx.fillText(`d=${dist1.toFixed(0)}`, (path1.x + normTarget.x)/2, (path1.y + normTarget.y)/2 - 10);
-                    drawVector(normCtx, path1.x, path1.y, normTarget.x, normTarget.y, '#6B7280', 2);
+                    // 1. Desenha a forma da parede (se for uma parede)
+                    drawTinyMazePiece(matrixCtx, tileValue, x, y, cellSize);
 
-                    normCtx.fillText(`d=${dist2.toFixed(0)}`, (path2.x + normTarget.x)/2, (path2.y + normTarget.y)/2 + 20);
-                    drawVector(normCtx, path2.x, path2.y, normTarget.x, normTarget.y, '#6B7280', 2);
-                    
-                    if (dist1 < dist2) {
-                        drawVector(normCtx, normGhost.x, normGhost.y, path1.x, path1.y, '#06B6D4', 4);
+                    // 2. Define a cor do número
+                    if (parseInt(tileValue) >= 3) {
+                        matrixCtx.fillStyle = '#60A5FA'; // Azul claro para números de paredes
                     } else {
-                        drawVector(normCtx, normGhost.x, normGhost.y, path2.x, path2.y, '#06B6D4', 4);
+                        matrixCtx.fillStyle = '#FDE68A'; // Amarelo pálido para números de caminhos
                     }
+                    
+                    // 3. Desenha o número no centro da célula
+                    matrixCtx.fillText(tileValue, x + cellSize / 2, y + cellSize / 2 + 1);
                 }
             }
-            document.getElementById('calc-norm').addEventListener('click', () => drawNormScene(true));
+        }
 
-            const matrixCanvas = document.getElementById('matrixCanvas');
-            let matrixCtx = setupCanvas(matrixCanvas);
-            const matrixDisplay = document.getElementById('matrix-display');
-            const adjMatrix = [
-                [0, 1, 0, 1, 0, 0], [1, 0, 1, 0, 1, 0], [0, 1, 0, 0, 0, 1],
-                [1, 0, 0, 0, 1, 0], [0, 1, 0, 1, 0, 1], [0, 0, 1, 0, 1, 0]
-            ];
-
-            function drawMatrixTable(highlightRow = -1) {
-                let html = '<table><thead><tr><th class="p-1 w-6"></th>';
-                adjMatrix.forEach((_, i) => html += `<th class="p-1 w-6 text-center ${highlightRow === i ? 'text-[#F59E0B]' : ''}">${i}</th>`);
-                html += '</tr></thead><tbody>';
-                adjMatrix.forEach((row, i) => {
-                    html += `<tr class="${highlightRow === i ? 'text-[#F59E0B]' : ''}"><td class="font-bold text-center">${i}</td>`;
-                    row.forEach((cell, j) => html += `<td class="p-1 text-center ${highlightRow !== -1 && adjMatrix[highlightRow][j] === 1 ? 'text-[#F59E0B] font-bold' : ''}">${cell}</td>`);
-                    html += '</tr>';
-                });
-                html += '</tbody></table>';
-                matrixDisplay.innerHTML = html;
+        function updateDisplayText(cell) {
+            if (cell) {
+                const value = tileMap[cell.row][cell.col];
+                const description = tileDescriptions[parseInt(value)] || "Desconhecido";
+                matrixDisplayText.innerHTML = `<span class="block text-lg text-[#FBBF24]">${value}</span><span class="block">${description}</span>`;
+            } else {
+                matrixDisplayText.innerHTML = 'Passe o mouse sobre a grade para ver os detalhes.';
             }
+        }
 
-            function drawMatrixScene(highlightNode = null) {
-                if (!matrixCtx) return;
-                const nodes = [
-                    { x: 60, y: 40, name: '0' }, { x: 150, y: 40, name: '1' }, { x: 240, y: 40, name: '2' },
-                    { x: 60, y: 120, name: '3' }, { x: 150, y: 120, name: '4' }, { x: 240, y: 120, name: '5' }
-                ].map(n => ({...n, x: n.x * (matrixCanvas.clientWidth / 300), y: n.y * (matrixCanvas.clientHeight / 160)}));
+        matrixCanvas.addEventListener('mousemove', (e) => {
+            const rect = matrixCanvas.getBoundingClientRect();
+            const rows = tileMap.length;
+            const cols = tileMap[0].length;
+            const cellSize = Math.min(rect.width / cols, rect.height / rows);
+            const offsetX = (rect.width - cols * cellSize) / 2;
+            const offsetY = (rect.height - rows * cellSize) / 2;
+            const mouseX = e.clientX - rect.left - offsetX;
+            const mouseY = e.clientY - rect.top - offsetY;
+            const hoveredCol = Math.floor(mouseX / cellSize);
+            const hoveredRow = Math.floor(mouseY / cellSize);
 
-                matrixCtx.clearRect(0, 0, matrixCanvas.width, matrixCanvas.height);
-                matrixCtx.lineWidth = 3;
-                for (let i = 0; i < adjMatrix.length; i++) {
-                    for (let j = i; j < adjMatrix[i].length; j++) {
-                        if (adjMatrix[i][j] === 1) {
-                            matrixCtx.strokeStyle = (highlightNode && (highlightNode.name == i || highlightNode.name == j)) ? '#F59E0B' : '#4A5568';
-                            matrixCtx.beginPath();
-                            matrixCtx.moveTo(nodes[i].x, nodes[i].y);
-                            matrixCtx.lineTo(nodes[j].x, nodes[j].y);
-                            matrixCtx.stroke();
-                        }
-                    }
+            if (hoveredRow >= 0 && hoveredRow < rows && hoveredCol >= 0 && hoveredCol < cols) {
+                const value = parseInt(tileMap[hoveredRow][hoveredCol]);
+                const newHighlightType = (value < 3) ? 'path' : 'wall';
+                if (newHighlightType !== highlightType) {
+                    highlightType = newHighlightType;
+                    drawTileMapScene();
                 }
-                nodes.forEach((node) => {
-                    matrixCtx.fillStyle = (highlightNode && highlightNode.name === node.name) ? '#F59E0B' : '#FBBF24';
-                    matrixCtx.beginPath();
-                    matrixCtx.arc(node.x, node.y, 18, 0, Math.PI * 2);
-                    matrixCtx.fill();
-                    matrixCtx.fillStyle = 'black';
-                    matrixCtx.font = '12px "Press Start 2P"';
-                    matrixCtx.textAlign = 'center';
-                    matrixCtx.textBaseline = 'middle';
-                    matrixCtx.fillText(node.name, node.x, node.y + 1);
-                });
-                drawMatrixTable(highlightNode ? parseInt(highlightNode.name) : -1);
-            }
-            
-            matrixCanvas.addEventListener('mousemove', (e) => {
-                const rect = matrixCanvas.getBoundingClientRect();
-                const x = e.clientX - rect.left;
-                const y = e.clientY - rect.top;
-                const nodes = [
-                    { x: 60, y: 40, name: '0' }, { x: 150, y: 40, name: '1' }, { x: 240, y: 40, name: '2' },
-                    { x: 60, y: 120, name: '3' }, { x: 150, y: 120, name: '4' }, { x: 240, y: 120, name: '5' }
-                ].map(n => ({...n, x: n.x * (matrixCanvas.clientWidth / 300), y: n.y * (matrixCanvas.clientHeight / 160)}));
-                let hoveredNode = null;
-                for (const node of nodes) {
-                    const dist = Math.hypot(node.x - x, node.y - y);
-                    if (dist < 18) {
-                        hoveredNode = node;
-                        break;
-                    }
+                updateDisplayText({ row: hoveredRow, col: hoveredCol });
+                drawMazePiece(pieceDetailCtx, tileMap[hoveredRow][hoveredCol], pieceDetailCanvas.clientWidth);
+            } else {
+                if (highlightType !== null) {
+                    highlightType = null;
+                    drawTileMapScene();
+                    updateDisplayText(null);
+                    if (pieceDetailCtx) pieceDetailCtx.clearRect(0, 0, pieceDetailCanvas.width, pieceDetailCanvas.height);
                 }
-                drawMatrixScene(hoveredNode);
-            });
-            matrixCanvas.addEventListener('mouseleave', () => drawMatrixScene(null));
-
-            function initializeCanvases() {
-                vCtx = setupCanvas(vCanvas);
-                opsCtx = setupCanvas(opsCanvas);
-                normCtx = setupCanvas(normCanvas);
-                matrixCtx = setupCanvas(matrixCanvas);
-                
-                drawVectorScene();
-                drawOpsScene();
-                drawNormScene();
-                drawMatrixScene();
-            }
-            
-            window.addEventListener('resize', initializeCanvases);
-
-            initializeCanvases();
-
-            const copyBtn = document.getElementById('copy-run');
-            if (copyBtn && navigator.clipboard) {
-                copyBtn.addEventListener('click', async () => {
-                    try {
-                        await navigator.clipboard.writeText('cd c\\\\Users\\\\lucas\\\\IdeaProjects\\\\capstone_algebra\npython pacman.py');
-                        copyBtn.textContent = 'Copiado!';
-                        setTimeout(() => (copyBtn.textContent = 'Copiar comando'), 1500);
-                    } catch (e) {
-                        copyBtn.textContent = 'Falhou :(';
-                        setTimeout(() => (copyBtn.textContent = 'Copiar comando'), 1500);
-                    }
-                });
             }
         });
-    </script>
+
+        matrixCanvas.addEventListener('mouseleave', () => {
+            highlightType = null;
+            drawTileMapScene();
+            updateDisplayText(null);
+            if (pieceDetailCtx) pieceDetailCtx.clearRect(0, 0, pieceDetailCanvas.width, pieceDetailCanvas.height);
+        });
+
+        // =================================================================================
+        // --- INICIALIZAÇÃO GERAL E BOTÃO DE COPIAR ---
+        // =================================================================================
+
+        function initializeCanvases() {
+            vCtx = setupCanvas(vCanvas);
+            opsCtx = setupCanvas(opsCanvas);
+            normCtx = setupCanvas(normCanvas);
+            matrixCtx = setupCanvas(matrixCanvas);
+            pieceDetailCtx = setupCanvas(pieceDetailCanvas);
+
+            drawVectorScene();
+            drawOpsScene();
+            drawNormScene();
+            drawTileMapScene();
+            updateDisplayText(null);
+            if(pieceDetailCtx) pieceDetailCtx.clearRect(0, 0, pieceDetailCanvas.width, pieceDetailCanvas.height);
+        }
+
+        window.addEventListener('resize', initializeCanvases);
+        initializeCanvases();
+
+        const copyBtn = document.getElementById('copy-run');
+        if (copyBtn && navigator.clipboard) {
+            copyBtn.addEventListener('click', async () => {
+                try {
+                    await navigator.clipboard.writeText('git clone https://github.com/Gabriel-Garcia152/capstone_algebra.git\ncd capstone_algebra\npython pacman.py');
+                    copyBtn.textContent = 'Copiado!';
+                    setTimeout(() => (copyBtn.textContent = 'Copiar Comandos'), 1500);
+                } catch (e) {
+                    copyBtn.textContent = 'Falhou :(';
+                    setTimeout(() => (copyBtn.textContent = 'Copiar Comandos'), 1500);
+                }
+            });
+        }
+    });
+</script>
 </body>
 </html>
